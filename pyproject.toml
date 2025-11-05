@@ -1,7 +1,7 @@
 [project]
 name = "pydantic-ai-code"
 version = "0.1.0"
-description = "Add your description here"
+description = "A professional dual-mode AI assistant with async architecture for conversational chat and text rephrasing"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
