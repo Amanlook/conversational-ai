@@ -67,9 +67,40 @@ class AgentManager:
         )
         return Agent(self.model_name, system_prompt=system_prompt)
 
-    def get_response(self, content: str, mode: str, context: str | None = None) -> str:
+    async def get_response(
+        self, content: str, mode: str, context: str | None = None
+    ) -> str:
         """
-        Get a response from the appropriate agent based on mode.
+        Get a response from the appropriate agent based on mode (async version).
+
+        Args:
+            content: The user's input content
+            mode: The mode ('conversational' or 'rephrasing')
+            context: Optional conversation context for conversational mode
+
+        Returns:
+            The agent's response
+
+        Raises:
+            ValueError: If mode is not supported
+        """
+        if mode == "conversational":
+            prompt = content
+            if context:
+                prompt = f"Previous conversation:\n{context}\n\nHuman: {content}"
+            result = await self.conversation_agent.run(prompt)
+            return str(result)
+        elif mode == "rephrasing":
+            result = await self.rephrasing_agent.run(content)
+            return str(result)
+        else:
+            raise ValueError(f"Unsupported mode: {mode}")
+
+    def get_response_sync(
+        self, content: str, mode: str, context: str | None = None
+    ) -> str:
+        """
+        Synchronous version of get_response for backward compatibility.
 
         Args:
             content: The user's input content

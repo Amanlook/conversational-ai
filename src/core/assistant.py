@@ -21,29 +21,29 @@ class DualModeAssistant:
         self.ui_helper = UIHelper()
         self.input_parser = InputParser()
 
-    def start_interactive_session(self) -> None:
+    async def start_interactive_session(self) -> None:
         """Start an interactive chat session."""
         self.ui_helper.print_welcome()
 
         try:
-            self._chat_loop()
+            await self._chat_loop()
         except KeyboardInterrupt:
             self.ui_helper.print_error("\nConversation interrupted. Goodbye!")
         finally:
             self.ui_helper.print_goodbye()
 
-    def _chat_loop(self) -> None:
+    async def _chat_loop(self) -> None:
         """Main chat loop handling user interactions."""
         while True:
             try:
                 # Get user input
-                user_input = self.ui_helper.get_user_input()
+                user_input = await self.ui_helper.get_user_input_async()
 
                 # Parse the input
                 parsed_input = self.input_parser.parse(user_input)
 
                 # Handle the parsed input
-                if not self._handle_parsed_input(parsed_input):
+                if not await self._handle_parsed_input(parsed_input):
                     break  # Exit command received
 
                 self.ui_helper.print_spacing()
@@ -52,7 +52,7 @@ class DualModeAssistant:
                 self.ui_helper.print_error(f"Oops! Something went wrong: {e}")
                 self.ui_helper.print_error("Let's keep chatting though!")
 
-    def _handle_parsed_input(self, parsed_input: ParsedInput) -> bool:
+    async def _handle_parsed_input(self, parsed_input: ParsedInput) -> bool:
         """
         Handle parsed user input and return whether to continue.
 
@@ -76,13 +76,13 @@ class DualModeAssistant:
 
         # Process valid input based on mode
         if parsed_input.mode == Mode.CONVERSATIONAL:
-            self._handle_conversational_mode(parsed_input.content)
+            await self._handle_conversational_mode(parsed_input.content)
         elif parsed_input.mode == Mode.REPHRASING:
-            self._handle_rephrasing_mode(parsed_input.content)
+            await self._handle_rephrasing_mode(parsed_input.content)
 
         return True
 
-    def _handle_conversational_mode(self, content: str) -> None:
+    async def _handle_conversational_mode(self, content: str) -> None:
         """
         Handle conversational mode interaction.
 
@@ -97,7 +97,7 @@ class DualModeAssistant:
 
         try:
             # Get AI response
-            response = self.agent_manager.get_response(
+            response = await self.agent_manager.get_response(
                 content, "conversational", self.conversation_manager.get_context()
             )
 
@@ -110,7 +110,7 @@ class DualModeAssistant:
         except Exception as e:
             self.ui_helper.print_error(f"Sorry, I couldn't process that: {e}")
 
-    def _handle_rephrasing_mode(self, content: str) -> None:
+    async def _handle_rephrasing_mode(self, content: str) -> None:
         """
         Handle rephrasing mode interaction.
 
@@ -122,7 +122,7 @@ class DualModeAssistant:
 
         try:
             # Get AI response (no context needed for rephrasing)
-            response = self.agent_manager.get_response(content, "rephrasing")
+            response = await self.agent_manager.get_response(content, "rephrasing")
 
             # Print response
             print(response)
@@ -130,9 +130,9 @@ class DualModeAssistant:
         except Exception as e:
             self.ui_helper.print_error(f"Sorry, I couldn't rephrase that: {e}")
 
-    def process_single_request(self, user_input: str) -> dict:
+    async def process_single_request(self, user_input: str) -> dict:
         """
-        Process a single request and return the result (useful for API/testing).
+        Process a single request and return the result (async version).
 
         Args:
             user_input: The raw user input
@@ -152,11 +152,62 @@ class DualModeAssistant:
         try:
             if parsed_input.mode == Mode.CONVERSATIONAL:
                 # For single requests, don't use conversation history
-                response = self.agent_manager.get_response(
+                response = await self.agent_manager.get_response(
                     parsed_input.content, "conversational"
                 )
             elif parsed_input.mode == Mode.REPHRASING:
-                response = self.agent_manager.get_response(
+                response = await self.agent_manager.get_response(
+                    parsed_input.content, "rephrasing"
+                )
+            else:
+                return {
+                    "success": False,
+                    "error": "Unsupported mode",
+                    "mode": parsed_input.mode.value,
+                }
+
+            return {
+                "success": True,
+                "response": response,
+                "mode": parsed_input.mode.value,
+                "original_input": parsed_input.content,
+            }
+
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "mode": parsed_input.mode.value,
+                "original_input": parsed_input.content,
+            }
+
+    def process_single_request_sync(self, user_input: str) -> dict:
+        """
+        Process a single request and return the result (sync version for compatibility).
+
+        Args:
+            user_input: The raw user input
+
+        Returns:
+            Dictionary containing response data and metadata
+        """
+        parsed_input = self.input_parser.parse(user_input)
+
+        if not parsed_input.is_valid:
+            return {
+                "success": False,
+                "error": parsed_input.error_message,
+                "mode": parsed_input.mode.value if parsed_input.mode else None,
+            }
+
+        try:
+            if parsed_input.mode == Mode.CONVERSATIONAL:
+                # For single requests, don't use conversation history
+                response = self.agent_manager.get_response_sync(
+                    parsed_input.content, "conversational"
+                )
+            elif parsed_input.mode == Mode.REPHRASING:
+                response = self.agent_manager.get_response_sync(
                     parsed_input.content, "rephrasing"
                 )
             else:

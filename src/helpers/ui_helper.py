@@ -1,5 +1,7 @@
 """UI helper utilities for displaying messages and formatting output."""
 
+import asyncio
+
 
 class UIHelper:
     """Handles user interface elements like welcome messages and formatting."""
@@ -54,8 +56,15 @@ class UIHelper:
 
     @staticmethod
     def get_user_input(prompt: str = "You: ") -> str:
-        """Get user input with consistent prompting."""
+        """Get user input with consistent prompting (synchronous)."""
         return input(prompt).strip()
+
+    @staticmethod
+    async def get_user_input_async(prompt: str = "You: ") -> str:
+        """Get user input with consistent prompting (async version)."""
+        # Use asyncio to run input in a thread pool to avoid blocking
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, lambda: input(prompt).strip())
 
     @staticmethod
     def print_thinking_indicator(mode: str) -> None:
