@@ -1,4 +1,4 @@
-# Dual-Mode AI Assistant
+# Dual-Mode AI Assistan
 
 A professional, high-performance dual-mode AI assistant built with **PydanticAI** and **async/await** architecture for concurrent request processing and optimal performance.
 
