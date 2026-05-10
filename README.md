@@ -7,26 +7,26 @@ A professional, high-performance dual-mode AI assistant built with **PydanticAI*
 ![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-orange.svg)
 ![Async](https://img.shields.io/badge/async-enabled-purple.svg)
 
-## 🎯 Features
+## Features
 
 ### Dual Operating Modes
-- **🗣️ Conversational Mode** - Context-aware friendly chat with conversation history
-- **✏️ Rephrasing Mode** - Professional grammar correction and text improvement
+- ** Conversational Mode** - Context-aware friendly chat with conversation history
+- ** Rephrasing Mode** - Professional grammar correction and text improvement
 
 ### High-Performance Architecture
-- **⚡ Async/Await** - Non-blocking operations for better performance
-- **🚀 Concurrent Processing** - Handle multiple requests simultaneously
-- **🔄 Backward Compatible** - Sync versions of all methods available
-- **📦 Modular Design** - Clean separation of concerns with SOLID principles
+- ** Async/Await** - Non-blocking operations for better performance
+- ** Concurrent Processing** - Handle multiple requests simultaneously
+- ** Backward Compatible** - Sync versions of all methods available
+- ** Modular Design** - Clean separation of concerns with SOLID principles
 
 ### Professional Features
-- **🎨 Clean Class-Based Architecture** - Maintainable and extensible code
-- **🛡️ Type Safety** - Full type hints and validation
-- **⚠️ Error Handling** - Graceful failure recovery and user feedback
-- **📊 Usage Analytics** - Conversation statistics and metrics
-- **🧪 Comprehensive Testing** - Demo script with various scenarios
+- ** Clean Class-Based Architecture** - Maintainable and extensible code
+- ** Type Safety** - Full type hints and validation
+- ** Error Handling** - Graceful failure recovery and user feedback
+- ** Usage Analytics** - Conversation statistics and metrics
+- ** Comprehensive Testing** - Demo script with various scenarios
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.14+
@@ -216,7 +216,7 @@ result = await assistant.process_single_request("conversational: Hello!")
 }
 ```
 
-## ⚡ Performance Features
+##  Performance Features
 
 ### Async Benefits
 - **Concurrent AI Calls**: Process multiple requests simultaneously
