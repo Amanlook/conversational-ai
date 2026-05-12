@@ -3,6 +3,7 @@
 from dotenv import load_dotenv
 from pydantic_ai import Agent
 
+load_dotenv()
 
 class AgentManager:
     """Manages AI agents for different modes and operations."""
@@ -14,7 +15,6 @@ class AgentManager:
         Args:
             model_name: The AI model to use for all agents
         """
-        load_dotenv()
         self.model_name = model_name
         self._conversation_agent: Agent | None = None
         self._rephrasing_agent: Agent | None = None
